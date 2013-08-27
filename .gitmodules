@@ -1,0 +1,3 @@
+[submodule "cookbooks/cookbook-openstack-block-storage"]
+	path = cookbooks/cookbook-openstack-block-storage
+	url = https://github.com/stackforge/cookbook-openstack-block-storage.git
