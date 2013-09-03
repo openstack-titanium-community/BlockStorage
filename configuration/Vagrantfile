@@ -1,0 +1,39 @@
+Vagrant.require_plugin('vagrant-hostmanager')
+
+domain = 'dell.com'
+
+# Define the Cinder cluster
+nodes = [
+  { :hostname => 'cinder1', :ip => '10.125.0.16', :box => 'ubuntu1204-chef'},
+  { :hostname => 'cinder2', :ip => '10.125.0.17', :box => 'ubuntu1204-chef'},
+  { :hostname => 'cinder3', :ip => '10.125.0.18', :box => 'ubuntu1204-chef'}
+]
+
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  nodes.each do |node|
+       config.vm.define node[:hostname] do |node_config|
+       # configure the box, hostname and networking 
+       node_config.vm.box = node[:box]
+       node_config.vm.hostname = node[:hostname] + '.' + domain
+       node_config.vm.network :private_network, ip: node[:ip]
+
+       node_config.vm.provision :chef_client do |chef|
+          chef.chef_server_url = 'https://10.125.0.10'
+          chef.validation_key_path = "chef-validator.pem"
+          chef.add_recipe "apt"
+          chef.add_recipe "python"
+          chef.add_recipe "mysql::client"
+          chef.add_recipe "openstack-common"
+          chef.add_recipe "openstack-block-storage::cinder-common"
+          chef.add_recipe "openstack-block-storage::api"
+          chef.add_recipe "openstack-block-storage::identity_registration"
+          chef.add_recipe "openstack-block-storage::volume"
+          chef.add_recipe "openstack-block-storage::scheduler"
+       end
+  end
+ end
+end
