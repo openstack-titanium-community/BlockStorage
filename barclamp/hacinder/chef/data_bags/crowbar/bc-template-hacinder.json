@@ -1,0 +1,28 @@
+{
+  "id": "bc-template-hacinder",
+  "description": "Provides ha-Cinder",
+  "attributes": {
+    "hacinder": {
+      "update_origins": false 
+    }
+  },
+  "deployment": {
+    "hacinder": {
+      "crowbar-revision": 0,
+      "element_states": {
+        "hacinder": [ "readying", "ready", "applying" ]
+      },
+      "elements": {},
+      "element_order": [
+        [ "hacinder" ]
+      ],
+      "config": {
+        "environment": "hacinder-base-config",
+        "mode": "full",
+        "transitions": false,
+        "transition_list": []
+      }
+    }
+  }
+}
+
